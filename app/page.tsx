@@ -5,10 +5,20 @@ import {
   IgetDiscoverMoviesResponse,
 } from "@/services/MovieService";
 import MovieCard from "@/components/MovieCard";
+import Paginate from "@/components/commons/Paginate";
+import { ISearchParams } from "@/types";
 
-export default async function Home() {
+interface IHome {
+  searchParams: ISearchParams;
+}
+
+export default async function Home(props: IHome) {
+  const { searchParams } = props;
+
+  const page = parseInt(searchParams["page"] ?? "1");
+
   let payload: IgetDiscoverMoviesPayload = {
-    page: 1,
+    page: page,
   };
 
   const discover_movies: IgetDiscoverMoviesResponse = await getDiscoverMovies(
@@ -25,6 +35,10 @@ export default async function Home() {
         <p>Page: {discover_movies.page}</p>
         <p>Total Pages: {discover_movies.total_pages}</p>
         <p>Total Results: {discover_movies.total_results}</p>
+      </div>
+
+      <div className="mb-4 p-4 rounded-lg bg-gray-800">
+        <Paginate page={discover_movies.page}></Paginate>
       </div>
 
       <ul className="list-none">
