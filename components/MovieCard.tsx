@@ -11,7 +11,10 @@ const MovieCard: React.FC<IMovieCard> = (props) => {
     <>
       <div className="bg-gray-800 rounded-lg shadow-sm px-8 py-8 space-y-4">
         <h3>Movie Name: {movie.title}</h3>
-        <p>Overview: {movie.overview}</p>
+        <p>Release Date: {movie.release_date}</p>
+        <p>Rating: {movie.vote_average}</p>
+        <p>Overview:</p>
+        <p>{movie.overview}</p>
         <p>Thumb:</p>
         <img
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
