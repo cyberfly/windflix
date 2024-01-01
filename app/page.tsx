@@ -37,11 +37,20 @@ export default async function Home(props: IHome) {
   return (
     <main className="min-h-screen">
       <header className="">
-        <div className="max-w-screen-2xl px-8 py-10 mx-auto">
+        <div className="max-w-screen-2xl px-8 py-10 mx-auto flex items-center justify-between">
           <Link href="/" className="text-4xl font-bold">
             <span className="text-slate-100">Wind</span>
             <span className="text-green-500">Flix</span>
           </Link>
+
+          <a
+            className="hover:underline text-2xl"
+            href="https://github.com/cyberfly/windflix"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Github
+          </a>
         </div>
       </header>
 
