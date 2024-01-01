@@ -58,9 +58,11 @@ const MovieModal: FC<IMovieModal> = (props) => {
                 className="rounded-t-lg"
                 fill
                 style={{ objectFit: "cover" }}
-                src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
+                src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
                 alt="thumb"
               />
+
+              {/* refer here for higher image size https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400 */}
 
               <div className="absolute w-full h-full bg-gradient-to-t from-slate-900"></div>
             </div>
