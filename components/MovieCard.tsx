@@ -32,7 +32,7 @@ const MovieCard: FC<IMovieCard> = (props) => {
         onClick={(e) => openModal(e)}
         type="button"
       >
-        <div className="h-full dark:bg-slate-800 dark:text-slate-100 rounded-lg ">
+        <div className="h-full w-full dark:bg-slate-800 dark:text-slate-100 rounded-lg ">
           <div className="relative ">
             <img
               className="rounded-t-lg"
