@@ -96,7 +96,10 @@ export default async function Home(props: IHome) {
               </span>
             </p>
           </div>
-          <Paginate page={discover_movies.page}></Paginate>
+          <Paginate
+            page={discover_movies.page}
+            total_pages={discover_movies.total_pages}
+          ></Paginate>
         </div>
       </section>
 

@@ -5,17 +5,21 @@ import useQueryFilter from "@/hooks/useQueryFilter";
 
 interface iPaginate {
   page: number;
+  total_pages: number;
 }
 
 const Paginate: FC<iPaginate> = (props) => {
-  const { page } = props;
+  const { page, total_pages } = props;
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const { updateUrlQueryString } = useQueryFilter();
 
-  const handlePageClick = (event: Event, type: string) => {
+  const handlePageClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    type: string
+  ) => {
     let new_page = page;
 
     if (type == "prev") {
@@ -31,14 +35,13 @@ const Paginate: FC<iPaginate> = (props) => {
     router.push(`/?${new_query_string}`);
   };
 
-  //TODO: handle pagination state (disabled, page less than 1, etc)
-
   return (
     <>
       <ul className="flex items-center space-x-4">
         <li>
           <button
-            className="rounded bg-slate-900 hover:bg-green-500 px-4 py-2 text-slate-100 hover:text-slate-900 p-1"
+            disabled={page == 1}
+            className="rounded bg-slate-900 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-green-500 px-4 py-2 text-slate-100 hover:text-slate-900 p-1"
             onClick={(e) => handlePageClick(e, "prev")}
           >
             Prev
@@ -46,7 +49,8 @@ const Paginate: FC<iPaginate> = (props) => {
         </li>
         <li>
           <button
-            className="rounded bg-slate-900 hover:bg-green-500 px-4 py-2 text-slate-100 hover:text-slate-900 p-1"
+            disabled={page == total_pages}
+            className="rounded bg-slate-900 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-green-500 px-4 py-2 text-slate-100 hover:text-slate-900 p-1"
             onClick={(e) => handlePageClick(e, "next")}
           >
             Next
