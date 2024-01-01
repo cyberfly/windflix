@@ -1,11 +1,27 @@
+"use client";
 import { DMovie } from "@/types";
-
+import { FC, useEffect, useState } from "react";
+import MovieModal from "@/components/MovieModal";
 export interface IMovieCard {
   movie: DMovie;
 }
 
-const MovieCard: React.FC<IMovieCard> = (props) => {
+const MovieCard: FC<IMovieCard> = (props) => {
   const { movie } = props;
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  function openModal() {
+    setModalIsOpen(true);
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
+  }
+
+  function afterOpenModal() {}
+
+  function afterCloseModal() {}
 
   return (
     <>
@@ -20,7 +36,19 @@ const MovieCard: React.FC<IMovieCard> = (props) => {
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
           alt=""
         />
+
+        <button onClick={(e) => openModal(e)} type="button">
+          Show Modal
+        </button>
       </div>
+
+      <MovieModal
+        movie={movie}
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        afterOpenModal={afterOpenModal}
+        afterCloseModal={afterCloseModal}
+      ></MovieModal>
     </>
   );
 };
