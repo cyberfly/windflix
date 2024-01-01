@@ -5,11 +5,11 @@ import useQueryFilter from "@/hooks/useQueryFilter";
 import { MOST_POPULAR_SORT } from "@/constants.d";
 
 interface iMovieFilter {
-  page: number;
+  movie_genres: [];
 }
 
 const MovieFilter: FC<iMovieFilter> = (props) => {
-  const { page, movie_genres } = props;
+  const { movie_genres } = props;
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,7 +21,7 @@ const MovieFilter: FC<iMovieFilter> = (props) => {
     searchParams.get("sort_by") ?? MOST_POPULAR_SORT
   );
 
-  const handleGenreChange = (event) => {
+  const handleGenreChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let genre_value = event.target.value;
 
     setGenre(genre_value);
@@ -31,7 +31,7 @@ const MovieFilter: FC<iMovieFilter> = (props) => {
     router.push(`/?${new_query_string}`);
   };
 
-  const handleSortChange = (event) => {
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let sort_by_value = event.target.value;
 
     setSortBy(sort_by_value);

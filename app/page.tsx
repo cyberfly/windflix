@@ -3,6 +3,7 @@ import {
   getMovieGenres,
   IgetDiscoverMoviesPayload,
   IgetDiscoverMoviesResponse,
+  IgetMovieGenresResponse,
 } from "@/services/MovieService";
 import MovieCard from "@/components/MovieCard";
 import Paginate from "@/components/commons/Paginate";
@@ -11,7 +12,7 @@ import { ISearchParams } from "@/types";
 import { MOST_POPULAR_SORT } from "@/constants.d";
 import Link from "next/link";
 interface IHome {
-  searchParams: ISearchParams;
+  searchParams: string;
 }
 
 export default async function Home(props: IHome) {
@@ -20,8 +21,6 @@ export default async function Home(props: IHome) {
   const page = parseInt(searchParams["page"] ?? "1");
   const with_genres = searchParams["with_genres"] ?? "";
   const sort_by = searchParams["sort_by"] ?? MOST_POPULAR_SORT;
-
-  // TODO: update IgetDiscoverMoviesPayload
 
   let payload: IgetDiscoverMoviesPayload = {
     page: page,
@@ -33,9 +32,7 @@ export default async function Home(props: IHome) {
     payload
   );
 
-  // TODO: add interface getMovieGenres
-
-  const movie_genres = await getMovieGenres(payload);
+  const movie_genres: IgetMovieGenresResponse = await getMovieGenres(payload);
 
   return (
     <main className="min-h-screen">

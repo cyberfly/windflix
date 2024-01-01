@@ -3,6 +3,8 @@ import { DMovie } from "@/types";
 
 export interface IgetDiscoverMoviesPayload {
   page: number;
+  with_genres: string | string[];
+  sort_by: string | string[];
 }
 
 export interface IgetDiscoverMoviesResponse {
@@ -28,6 +30,10 @@ export async function getDiscoverMovies(payload: IgetDiscoverMoviesPayload) {
   }
 
   return await res.json();
+}
+
+export interface IgetMovieGenresResponse {
+  genres: [];
 }
 
 export async function getMovieGenres(payload) {
