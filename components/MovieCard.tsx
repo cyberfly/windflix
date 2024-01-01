@@ -17,7 +17,7 @@ const MovieCard: FC<IMovieCard> = (props) => {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  function openModal() {
+  function openModal(e: React.MouseEvent<HTMLButtonElement>) {
     setModalIsOpen(true);
   }
 

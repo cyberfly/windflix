@@ -11,14 +11,19 @@ import MovieFilter from "@/components/commons/MovieFilter";
 import { ISearchParams } from "@/types";
 import { MOST_POPULAR_SORT } from "@/constants.d";
 import Link from "next/link";
+
 interface IHome {
-  searchParams: string;
+  params: {};
+  searchParams: ISearchParams;
 }
 
 export default async function Home(props: IHome) {
   const { searchParams } = props;
 
-  const page = parseInt(searchParams["page"] ?? "1");
+  const page = Array.isArray(searchParams["page"])
+    ? parseInt(searchParams["page"][0] ?? "1", 10)
+    : parseInt(searchParams["page"] ?? "1", 10);
+
   const with_genres = searchParams["with_genres"] ?? "";
   const sort_by = searchParams["sort_by"] ?? MOST_POPULAR_SORT;
 

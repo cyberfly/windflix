@@ -32,11 +32,13 @@ export async function getDiscoverMovies(payload: IgetDiscoverMoviesPayload) {
   return await res.json();
 }
 
+export interface IgetMovieGenresPayload {}
+
 export interface IgetMovieGenresResponse {
   genres: [];
 }
 
-export async function getMovieGenres(payload) {
+export async function getMovieGenres(payload: IgetMovieGenresPayload) {
   let {} = payload;
 
   const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`;

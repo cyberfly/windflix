@@ -3,9 +3,10 @@ import { FC, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useQueryFilter from "@/hooks/useQueryFilter";
 import { MOST_POPULAR_SORT } from "@/constants.d";
+import { DGenre } from "@/types";
 
 interface iMovieFilter {
-  movie_genres: [];
+  movie_genres: DGenre[];
 }
 
 const MovieFilter: FC<iMovieFilter> = (props) => {

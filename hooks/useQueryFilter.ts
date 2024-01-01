@@ -5,9 +5,9 @@ const useQueryFilter = () => {
     let searchParams = new URLSearchParams(window.location.search);
 
     if (searchParams.has(key)) {
-      searchParams.set(key, value);
+      searchParams.set(key, value.toString());
     } else {
-      searchParams.append(key, value);
+      searchParams.append(key, value.toString());
     }
 
     // if key is not page, we need to reset pagination to page 1
