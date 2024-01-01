@@ -38,18 +38,18 @@ const Paginate: FC<iPaginate> = (props) => {
       <ul className="flex items-center space-x-4">
         <li>
           <button
-            className="rounded bg-gray-900 px-2 py-1 text-white p-1"
+            className="rounded bg-slate-900 px-4 py-2 text-white p-1"
             onClick={(e) => handlePageClick(e, "prev")}
           >
-            prev page
+            Prev
           </button>
         </li>
         <li>
           <button
-            className="rounded bg-gray-900 px-2 py-1 text-white p-1"
+            className="rounded bg-slate-900 px-4 py-2 text-white p-1"
             onClick={(e) => handlePageClick(e, "next")}
           >
-            next page
+            Next
           </button>
         </li>
       </ul>

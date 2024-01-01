@@ -2,26 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+body {
+  @apply dark:bg-slate-900 dark:text-slate-100;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/* modal style */
+
+.modal-header {
+  @apply px-5;
+}
+
+.modal-body {
+  /* @apply px-5; */
+}
+
+.modal-footer {
+  @apply border-t border-gray-200 px-5 pt-4;
+}
+
+@media screen and (min-width: 992px) {
+  .ReactModal__Content {
+    max-width: 80%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@media screen and (min-width: 576px) and (max-width: 991px) {
+  .ReactModal__Content {
+    max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .ReactModal__Content {
+    max-width: 95%;
+  }
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
 }

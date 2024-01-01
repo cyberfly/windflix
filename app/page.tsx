@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   getDiscoverMovies,
   getMovieGenres,
@@ -39,33 +38,68 @@ export default async function Home(props: IHome) {
   const movie_genres = await getMovieGenres(payload);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h3 className="text-2xl font-bold mb-4">Now Showing</h3>
+    <main className="min-h-screen">
+      <header className="">
+        <div className="max-w-screen-2xl px-8 py-10 mx-auto">
+          <h3 className="text-4xl font-bold">
+            <span className="text-green-200">Wind</span>
+            <span className="text-green-500">Flix</span>
+          </h3>
+        </div>
+      </header>
 
-      <div className="mb-4 p-4 rounded-lg bg-gray-800">
-        <h4>Meta:</h4>
-        <p>Page: {discover_movies.page}</p>
-        <p>Total Pages: {discover_movies.total_pages}</p>
-        <p>Total Results: {discover_movies.total_results}</p>
-      </div>
+      <section className="max-w-screen-2xl px-8 mx-auto">
+        <h3 className="text-2xl font-bold mb-4">Now Showing</h3>
+      </section>
 
-      <div className="mb-4 p-4 rounded-lg bg-gray-800">
-        <MovieFilter movie_genres={movie_genres.genres}></MovieFilter>
-      </div>
+      {/* filters */}
 
-      <div className="mb-4 p-4 rounded-lg bg-gray-800">
-        <Paginate page={discover_movies.page}></Paginate>
-      </div>
+      <section className="max-w-screen-2xl px-8 mx-auto">
+        <div className="mb-4 p-4 rounded-lg bg-slate-800">
+          <MovieFilter movie_genres={movie_genres.genres}></MovieFilter>
+        </div>
+      </section>
 
-      <ul className="list-none">
-        {discover_movies.results.map((movie, key) => {
-          return (
-            <li key={key} className="mb-6 px-2">
-              <MovieCard movie={movie}></MovieCard>
-            </li>
-          );
-        })}
-      </ul>
+      {/* end filters */}
+
+      {/* movie list */}
+
+      <section className="max-w-screen-2xl px-8 mx-auto">
+        <div className="flex flex-wrap -mb-4 -mx-2">
+          {discover_movies.results.map((movie, key) => {
+            return (
+              <div
+                key={key}
+                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4 px-2"
+              >
+                <MovieCard movie={movie}></MovieCard>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* end movie list */}
+
+      {/* pagination */}
+      <section className="max-w-screen-2xl my-8 px-8 mx-auto">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-4 p-4 rounded-lg bg-slate-800 ">
+          <div className="flex flex-col md:flex-row items-center p-4 rounded-lg bg-slate-800 md:space-x-4">
+            <p>
+              <span className="font-bold">Page:</span> {discover_movies.page} of{" "}
+              {discover_movies.total_pages}
+            </p>
+
+            <p>
+              <span className="font-bold">Total Results:</span>{" "}
+              {discover_movies.total_results}
+            </p>
+          </div>
+          <Paginate page={discover_movies.page}></Paginate>
+        </div>
+      </section>
+
+      {/* end pagination */}
     </main>
   );
 }

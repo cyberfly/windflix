@@ -43,14 +43,14 @@ const MovieFilter: FC<iMovieFilter> = (props) => {
 
   return (
     <>
-      <div className="flex items-center">
-        <div>
-          <label className="block" htmlFor="genre">
+      <div className="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
+        <div className="w-full md:w-auto">
+          <label className="block mb-2" htmlFor="genre">
             Genre
           </label>
 
           <select
-            className="text-gray-800"
+            className="w-full text-slate-800 rounded-lg border-gray-400 text-sm"
             id="genre"
             value={genre}
             onChange={(e) => handleGenreChange(e)}
@@ -66,13 +66,13 @@ const MovieFilter: FC<iMovieFilter> = (props) => {
           </select>
         </div>
 
-        <div>
-          <label className="block" htmlFor="sort_by">
+        <div className="w-full md:w-auto">
+          <label className="block mb-2" htmlFor="sort_by">
             Sort By
           </label>
 
           <select
-            className="text-gray-800"
+            className="w-full text-slate-800 rounded-lg border-gray-400 text-sm"
             id="sort_by"
             value={sortBy}
             onChange={(e) => handleSortChange(e)}
