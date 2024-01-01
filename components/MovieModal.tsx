@@ -43,6 +43,10 @@ const MovieModal: FC<IMovieModal> = (props) => {
     movie.release_date
   ).toLocaleDateString("en-GB");
 
+  const image_path = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`
+    : "/placeholder.jpg";
+
   return (
     <>
       <Modal
@@ -62,7 +66,7 @@ const MovieModal: FC<IMovieModal> = (props) => {
                 className="rounded-t-lg"
                 fill
                 style={{ objectFit: "cover" }}
-                src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
+                src={image_path}
                 alt="thumb"
               />
 
