@@ -11,6 +11,10 @@ export interface IMovieCard {
 const MovieCard: FC<IMovieCard> = (props) => {
   const { movie } = props;
 
+  const image_path = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+    : "/placeholder_poster.jpeg";
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   function openModal() {
@@ -34,11 +38,7 @@ const MovieCard: FC<IMovieCard> = (props) => {
       >
         <div className="h-full w-full dark:bg-slate-800 dark:text-slate-100 rounded-lg ">
           <div className="relative ">
-            <img
-              className="rounded-t-lg"
-              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-              alt=""
-            />
+            <img className="rounded-t-lg" src={image_path} alt="" />
 
             <div className="absolute top-0 right-0 bg-green-500 p-1 rounded-tr-lg">
               <span className="text-gray-800 font-medium">
