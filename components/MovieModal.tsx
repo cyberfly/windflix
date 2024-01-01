@@ -39,6 +39,10 @@ const MovieModal: FC<IMovieModal> = (props) => {
   const { movie, modalIsOpen, closeModal, afterOpenModal, afterCloseModal } =
     props;
 
+  const formatted_release_date = new Date(
+    movie.release_date
+  ).toLocaleDateString("en-GB");
+
   return (
     <>
       <Modal
@@ -89,8 +93,13 @@ const MovieModal: FC<IMovieModal> = (props) => {
 
             <div className="absolute bottom-0 px-8">
               <h3 className="text-2xl mb-8 text-white">{movie.title}</h3>
-              <p>Release Date: {movie.release_date}</p>
-              <p>Rating: {movie.vote_average}</p>
+              <p className="mb-4">Release Date: {formatted_release_date}</p>
+              <p>
+                Rating:{" "}
+                <span className="bg-green-500 text-slate-800 p-1 rounded">
+                  {movie.vote_average}
+                </span>
+              </p>
             </div>
           </div>
 
