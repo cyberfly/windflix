@@ -2,15 +2,22 @@
 import { FC, useEffect, useState } from "react";
 import { DMovie } from "@/types";
 import Modal from "react-modal";
+import Image from "next/image";
 
 const customStyles = {
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+  },
   content: {
     top: "50%",
     left: "50%",
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
+    padding: "0px",
     transform: "translate(-50%, -50%)",
+    background: "rgb(0, 0, 0, 1.0)",
+    border: "1px solid #22c55e",
   },
 };
 
@@ -32,8 +39,6 @@ const MovieModal: FC<IMovieModal> = (props) => {
   const { movie, modalIsOpen, closeModal, afterOpenModal, afterCloseModal } =
     props;
 
-  function doSomething() {}
-
   return (
     <>
       <Modal
@@ -42,38 +47,54 @@ const MovieModal: FC<IMovieModal> = (props) => {
         onAfterClose={afterCloseModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel="Movie Modal"
       >
-        <button
-          className="absolute top-[10px] right-[20px]"
-          onClick={closeModal}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+        <div className="modal-body bg-gradient-to-t from-slate-900  to-slate-900 ">
+          <div className="relative">
+            <div className="relative h-56 md:h-96 lg:h-[28rem]">
+              <Image
+                placeholder="blur"
+                blurDataURL="/placeholder.jpg"
+                className="rounded-t-lg"
+                fill
+                style={{ objectFit: "cover" }}
+                src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
+                alt="thumb"
+              />
 
-        <div className="modal-header text-gray-800">
-          <h3 className="text-2xl mb-8">Modal Header {movie.title}</h3>
-        </div>
+              <div className="absolute w-full h-full bg-gradient-to-t from-slate-900"></div>
+            </div>
 
-        <div className="modal-body"></div>
-        <div className="modal-footer">
-          <div className="text-center">
-            <button onClick={(e) => doSomething(e)} type="button">
-              Ok
+            <button
+              className="absolute top-[10px] right-[20px]"
+              onClick={closeModal}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
+
+            <div className="absolute bottom-0 px-8">
+              <h3 className="text-2xl mb-8 text-white">{movie.title}</h3>
+              <p>Release Date: {movie.release_date}</p>
+              <p>Rating: {movie.vote_average}</p>
+            </div>
+          </div>
+
+          <div className="px-8 py-8 space-y-4">
+            <h4 className="text-lg font-semibold">Overview:</h4>
+            <p>{movie.overview}</p>
           </div>
         </div>
       </Modal>
