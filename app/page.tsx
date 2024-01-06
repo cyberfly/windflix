@@ -1,15 +1,17 @@
 import {
   getDiscoverMovies,
+  getDiscoverMoviesCursorPaginate,
   getMovieGenres,
   IgetDiscoverMoviesPayload,
   IgetDiscoverMoviesResponse,
   IgetMovieGenresResponse,
+  IgetDiscoverMoviesCursorPaginatePayload,
 } from "@/services/MovieService";
 import MovieCard from "@/components/MovieCard";
 import Paginate from "@/components/commons/Paginate";
 import MovieFilter from "@/components/commons/MovieFilter";
 import { ISearchParams } from "@/types";
-import { MOST_POPULAR_SORT } from "@/constants.d";
+import { MOST_POPULAR_SORT, LESS_POPULAR_SORT } from "@/constants.d";
 import Link from "next/link";
 
 interface IHome {
@@ -24,8 +26,23 @@ export default async function Home(props: IHome) {
     ? parseInt(searchParams["page"][0] ?? "1", 10)
     : parseInt(searchParams["page"] ?? "1", 10);
 
+  const cursor_page = Array.isArray(searchParams["cursor_page"])
+    ? parseInt(searchParams["cursor_page"][0] ?? "1", 10)
+    : parseInt(searchParams["cursor_page"] ?? "1", 10);
+
+  // const cursor_page =
+  //   searchParams["cursor_page"] !== undefined
+  //     ? Array.isArray(searchParams["cursor_page"])
+  //       ? parseInt(searchParams["cursor_page"][0] ?? "1", 10)
+  //       : parseInt(searchParams["cursor_page"] ?? "1", 10)
+  //     : null;
+
+  const cursor_id = Array.isArray(searchParams["cursor_id"])
+    ? parseInt(searchParams["cursor_id"][0] ?? "0", 10)
+    : parseInt(searchParams["cursor_id"] ?? "0", 10);
+
   const with_genres = searchParams["with_genres"] ?? "";
-  const sort_by = searchParams["sort_by"] ?? MOST_POPULAR_SORT;
+  const sort_by = searchParams["sort_by"] ?? LESS_POPULAR_SORT;
 
   let payload: IgetDiscoverMoviesPayload = {
     page: page,
@@ -36,6 +53,16 @@ export default async function Home(props: IHome) {
   const discover_movies: IgetDiscoverMoviesResponse = await getDiscoverMovies(
     payload
   );
+
+  let payload2: IgetDiscoverMoviesCursorPaginatePayload = {
+    page: page,
+    cursor_page: cursor_page,
+    cursor_id: cursor_id,
+    with_genres: with_genres,
+    sort_by: sort_by,
+  };
+
+  const discover_movies2 = await getDiscoverMoviesCursorPaginate(payload2);
 
   const movie_genres: IgetMovieGenresResponse = await getMovieGenres(payload);
 
@@ -77,7 +104,7 @@ export default async function Home(props: IHome) {
 
       <section className="max-w-screen-2xl px-8 mx-auto">
         <div className="flex flex-wrap -mb-4 -mx-2">
-          {discover_movies.results.map((movie, key) => {
+          {discover_movies2.results.map((movie, key) => {
             return (
               <div
                 key={key}
@@ -112,6 +139,8 @@ export default async function Home(props: IHome) {
           </div>
           <Paginate
             page={discover_movies.page}
+            cursor_page={discover_movies2.cursor_page}
+            cursor_id={discover_movies2.cursor_id}
             total_pages={discover_movies.total_pages}
           ></Paginate>
         </div>
