@@ -58,8 +58,6 @@ export async function getMovieGenres(payload: IgetMovieGenresPayload) {
 
 export interface IgetDiscoverMoviesCursorPaginatePayload {
   page: number;
-  cursor_page: number;
-  cursor_id: number;
   with_genres: string | string[];
   sort_by: string | string[];
 }
@@ -74,7 +72,7 @@ export interface IgetDiscoverMoviesCursorPaginateResponse {
 export async function getDiscoverMoviesCursorPaginate(
   payload: IgetDiscoverMoviesCursorPaginatePayload
 ) {
-  let { page, cursor_page, cursor_id, with_genres, sort_by } = payload;
+  let { page, with_genres, sort_by } = payload;
 
   /* Idea Breakdown:
   1. API supports only 20 records per page. 30 / 20 = 1.5 = 2 page
@@ -102,11 +100,26 @@ export async function getDiscoverMoviesCursorPaginate(
   */
 
   /**
-   * Easier to test with less popular, data dont change much
-   * First page (1,2)(20,10): Let the Sea Resound -> 野球どアホウ未亡人
-   * Second Page (2,3)(10,20):cursor_id 0: Close Dalny -> Epiplaphobia
-   * Third Page (4,5)(20,10): Paco Roca -> The Worker
-   * Fourth Page (5,6)(10,20):cursor_id 0: Martha Argerich -> KEVIN
+   * Try to find some pattern from here (inverse on even page)
+   * If need 30, pattern is (20,10),(10,20),(20,10)
+   * If need 40, pattern is (20,20),(20,20),(20,20)
+   * If need 50, pattern is (20,20,10),(10,20,20),(20,20,10)
+   * If need 60, pattern is (20,20,20),(20,20,20),(20,20,20)
+   * If need 70, pattern is (20,20,20,10),(10,20,20,20),(20,20,20,10)
+   */
+
+  /**
+   * Slice pattern
+   * If need 30, pattern is (0,30),(10,40),(0,30),(10,40)
+   *
+   * 20 + 20 = 40 (0,30) 1-2
+   * 20 + 20 = 40 (10,40) 2-3
+   * 20 + 20 = 40 (0,30) 4-5
+   * 20 + 20 = 40 (10,40) 5-6
+   */
+
+  /**
+   * Update: we can simplify by removing cursor page and cursor id, just use slice based on calculation
    */
 
   console.log("---->STARTING MOVIES FETCH<-----");
@@ -117,20 +130,19 @@ export async function getDiscoverMoviesCursorPaginate(
 
   const page_needed = Math.ceil(client_size / api_size);
 
-  const last_page = cursor_page - 1 + page_needed;
-  let next_cursor_page = last_page;
-
-  console.log("cursor_page", cursor_page);
-  console.log("page_needed", page_needed);
-  console.log("last_page", last_page);
-
   let promises = [];
 
-  for (let i = cursor_page; i <= last_page; i++) {
-    console.log(`Processing page ${i}`);
+  const getApiPageNumber = (page_number: number, per_page: number): number => {
+    let api_page_number = ((page_number - 1) * per_page) / api_size + 1;
 
+    return Math.floor(api_page_number);
+  };
+
+  const starting_page = getApiPageNumber(page, client_size);
+
+  for (let i = 0; i < page_needed; i++) {
     let page_payload = {
-      page: i,
+      page: starting_page + i,
       with_genres: with_genres,
       sort_by: sort_by,
     };
@@ -140,80 +152,47 @@ export async function getDiscoverMoviesCursorPaginate(
 
   const responses = await Promise.all(promises);
 
-  // console.log('responses', responses);
-
   // IMPORTANT. Here we will transform the data to current interface
 
   let total_results = responses[0].total_results;
 
   let total_pages = Math.ceil(total_results / client_size);
 
-  let next_cursor_id = 0;
-
+  let combined_page_movies = [];
   let page_movies = [];
 
-  for (const response of responses) {
-    let page_results = response.results;
+  // Combine results arrays using map and flat
+  combined_page_movies = responses.map((response) => response.results).flat();
 
-    console.log(`page_${response.page}_results_first_record`, page_results[0]);
+  // console.log("combined_page_movies", combined_page_movies);
 
-    if (cursor_id !== 0 && cursor_page == response.page) {
-      const targetIndex = page_results.findIndex(
-        (record) => record.id === cursor_id
-      );
+  // determine slicing size
 
-      if (targetIndex !== -1) {
-        const recordsAfterTarget = page_results.slice(targetIndex);
-        // console.log(recordsAfterTarget);
+  let slice_start_index = 0;
+  let slice_end_index = 0;
 
-        page_movies = [...page_movies, ...recordsAfterTarget];
-      }
-    } else {
-      const needed_records_size = Math.min(
-        client_size - page_movies.length,
-        page_results.length
-      );
+  // second page end of pattern
+  if (page % 2 === 0) {
+    // slice_start_index = 10;
+    // slice_end_index = 40;
 
-      console.log("response.page", response.page);
-      console.log("needed_records_size", needed_records_size);
-      // console.log("page_results", page_results[0]);
-
-      // for example only need 10 out of 20, then we need to get cursor_id
-      if (needed_records_size != api_size) {
-        const next_cursor_results = page_results.slice(needed_records_size);
-
-        const first_cursor_remaining_id = next_cursor_results[0]?.id;
-
-        next_cursor_id = first_cursor_remaining_id;
-      } else {
-        // skip the first page logic
-        if (cursor_page != 1) {
-          // if need 20, then it means we got all data from last page, so next cursor page should be increase + 1
-          next_cursor_page = last_page + 1;
-        }
-      }
-
-      page_movies = [
-        ...page_movies,
-        ...page_results.slice(0, needed_records_size),
-      ];
-    }
-
-    if (page_movies.length >= client_size) {
-      break;
-    }
+    slice_start_index = client_size - api_size;
+    slice_end_index = client_size + slice_start_index;
+  } else {
+    // slice_end_index = 30;
+    slice_end_index = client_size;
+    slice_start_index = 0;
   }
 
-  console.log("next_cursor_page", next_cursor_page);
-  console.log("next_cursor_id", next_cursor_id);
+  // get the page movies by slicing
+
+  page_movies = combined_page_movies.slice(slice_start_index, slice_end_index);
 
   const paginate_result = {
     page: page,
     results: page_movies,
     total_pages: total_pages,
     total_results: total_results,
-    cursor_page: next_cursor_page,
-    cursor_id: next_cursor_id,
   };
 
   return paginate_result;
