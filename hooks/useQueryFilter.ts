@@ -1,18 +1,21 @@
 import { useState, useCallback } from "react";
 
 const useQueryFilter = () => {
-  function updateUrlQueryString(key: string, value: string | number) {
+  type QueryParams = Record<string, string | number>;
+
+  function updateUrlQueryString(params: QueryParams) {
     let searchParams = new URLSearchParams(window.location.search);
 
-    if (searchParams.has(key)) {
-      searchParams.set(key, value.toString());
-    } else {
-      searchParams.append(key, value.toString());
-    }
+    Object.entries(params).forEach(([key, value]) => {
+      if (searchParams.has(key)) {
+        searchParams.set(key, value.toString());
+      } else {
+        searchParams.append(key, value.toString());
+      }
+    });
 
-    // if key is not page, we need to reset pagination to page 1
-
-    if (key != "page") {
+    // If key is not "page", reset pagination to page 1
+    if (!params.hasOwnProperty("page")) {
       searchParams.set("page", "1");
     }
 

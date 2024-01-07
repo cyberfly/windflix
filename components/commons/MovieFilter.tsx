@@ -27,7 +27,11 @@ const MovieFilter: FC<iMovieFilter> = (props) => {
 
     setGenre(genre_value);
 
-    let new_query_string = updateUrlQueryString("with_genres", genre_value);
+    let query_data = {
+      with_genres: genre_value,
+    };
+
+    let new_query_string = updateUrlQueryString(query_data);
 
     router.push(`/?${new_query_string}`);
   };
@@ -37,7 +41,11 @@ const MovieFilter: FC<iMovieFilter> = (props) => {
 
     setSortBy(sort_by_value);
 
-    let new_query_string = updateUrlQueryString("sort_by", sort_by_value);
+    let query_data = {
+      sort_by: sort_by_value,
+    };
+
+    let new_query_string = updateUrlQueryString(query_data);
 
     router.push(`/?${new_query_string}`);
   };

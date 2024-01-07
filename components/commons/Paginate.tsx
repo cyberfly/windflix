@@ -30,7 +30,11 @@ const Paginate: FC<iPaginate> = (props) => {
       new_page = Number(page) + 1;
     }
 
-    let new_query_string = updateUrlQueryString("page", new_page);
+    let query_data = {
+      page: new_page,
+    };
+
+    let new_query_string = updateUrlQueryString(query_data);
 
     router.push(`/?${new_query_string}`);
   };
