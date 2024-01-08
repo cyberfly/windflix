@@ -4,6 +4,8 @@ import { DMovie } from "@/types";
 export interface IgetDiscoverMoviesPayload {
   page: number;
   with_genres: string | string[];
+  vote_average_gte: number;
+  vote_average_lte: number;
   sort_by: string | string[];
 }
 
@@ -15,9 +17,10 @@ export interface IgetDiscoverMoviesResponse {
 }
 
 export async function getDiscoverMovies(payload: IgetDiscoverMoviesPayload) {
-  let { page, with_genres, sort_by } = payload;
+  let { page, with_genres, vote_average_gte, vote_average_lte, sort_by } =
+    payload;
 
-  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=en-US&page=${page}&with_genres=${with_genres}&sort_by=${sort_by}`;
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=en-US&page=${page}&with_genres=${with_genres}&vote_average.gte=${vote_average_gte}&vote_average.lte=${vote_average_lte}&sort_by=${sort_by}`;
 
   console.log("url", url);
 
@@ -59,6 +62,8 @@ export async function getMovieGenres(payload: IgetMovieGenresPayload) {
 export interface IgetDiscoverMoviesCursorPaginatePayload {
   page: number;
   with_genres: string | string[];
+  vote_average_gte: number;
+  vote_average_lte: number;
   sort_by: string | string[];
 }
 
@@ -72,7 +77,8 @@ export interface IgetDiscoverMoviesCursorPaginateResponse {
 export async function getDiscoverMoviesCursorPaginate(
   payload: IgetDiscoverMoviesCursorPaginatePayload
 ) {
-  let { page, with_genres, sort_by } = payload;
+  let { page, with_genres, vote_average_gte, vote_average_lte, sort_by } =
+    payload;
 
   /* Idea Breakdown:
   1. API supports only 20 records per page. 30 / 20 = 1.5 = 2 page
@@ -144,6 +150,8 @@ export async function getDiscoverMoviesCursorPaginate(
     let page_payload = {
       page: starting_page + i,
       with_genres: with_genres,
+      vote_average_gte: vote_average_gte,
+      vote_average_lte: vote_average_lte,
       sort_by: sort_by,
     };
 

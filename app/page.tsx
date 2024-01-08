@@ -11,7 +11,11 @@ import MovieCard from "@/components/MovieCard";
 import Paginate from "@/components/commons/Paginate";
 import MovieFilter from "@/components/commons/MovieFilter";
 import { ISearchParams } from "@/types";
-import { MOST_POPULAR_SORT, LESS_POPULAR_SORT } from "@/constants.d";
+import {
+  MOST_POPULAR_SORT,
+  LESS_POPULAR_SORT,
+  DEFAULT_VOTE_AVERAGE_GTE,
+} from "@/constants.d";
 import Link from "next/link";
 
 interface IHome {
@@ -27,6 +31,21 @@ export default async function Home(props: IHome) {
     : parseInt(searchParams["page"] ?? "1", 10);
 
   const with_genres = searchParams["with_genres"] ?? "";
+
+  const vote_average_gte_param = searchParams["vote_average_gte"];
+  const vote_average_gte =
+    typeof vote_average_gte_param === "string"
+      ? parseInt(vote_average_gte_param, DEFAULT_VOTE_AVERAGE_GTE)
+      : DEFAULT_VOTE_AVERAGE_GTE;
+
+  // const vote_average_lte = searchParams["vote_average_lte"] ?? 10;
+
+  const vote_average_lte_param = searchParams["vote_average_lte"];
+  const vote_average_lte =
+    typeof vote_average_lte_param === "string"
+      ? parseInt(vote_average_lte_param, 10)
+      : 10;
+
   const sort_by = searchParams["sort_by"] ?? MOST_POPULAR_SORT;
 
   // let payload: IgetDiscoverMoviesPayload = {
@@ -42,6 +61,8 @@ export default async function Home(props: IHome) {
   let payload: IgetDiscoverMoviesCursorPaginatePayload = {
     page: page,
     with_genres: with_genres,
+    vote_average_gte: vote_average_gte,
+    vote_average_lte: vote_average_lte,
     sort_by: sort_by,
   };
 
